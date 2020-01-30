@@ -19,6 +19,13 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 
+
+
+/**
+ * WILL NEVER BE USED
+ * IGNORE
+ */
+
 public class SSLSocketFactory implements LayeredSocketFactory
 {
 

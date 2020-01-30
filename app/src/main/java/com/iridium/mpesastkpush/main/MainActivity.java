@@ -1,27 +1,17 @@
 package com.iridium.mpesastkpush.main;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
-import com.iridium.mpesastkpush.utility.Constants;
 import com.iridium.mpesastkpush.R;
-
+import com.iridium.mpesastkpush.utility.Constants;
 import org.json.JSONException;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -33,30 +23,28 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
 
-import static android.Manifest.permission.READ_PHONE_NUMBERS;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.READ_SMS;
-
 public class MainActivity extends AppCompatActivity implements ProviderInstaller.ProviderInstallListener
 {
 
     private Button mpesaBtn;
     private Mpesa mpesaObject;
+
+    private final String TAG  = "MPESA_ACTIVITY";
+    private static final int ERROR_DIALOG_REQUEST_CODE = 1;
+
     private String passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
     private String timeStamp = null;
     private  String passwordSalt = null;
     private String password = null;
+
     private String shortCode = "174379";
     private String accountRef = "CAS884BG75G5";
-    private String transDesc = "Dynamic Capital loan facilitation charges payment";
-    private final String TAG  = "MPESA_ACTIVITY";
-
-    private static final int ERROR_DIALOG_REQUEST_CODE = 1;
+    private String transDesc = "Transaction";
+    private String phoneNumber = "254XXXXXXX";
 
     private boolean retryProviderInstall;
     private SSLContext sslContext = null;
 
-    private String phoneNumber = "254729893875";
 
 
     @Override
@@ -65,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //Enabling TLS which is not by default enabled, and running the protocol
+        //on SLL , preventing associated TIMEOUT error
         ProviderInstaller.installIfNeededAsync(this, this);
 
                 try
@@ -86,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
                 {
                     engine.setUseClientMode(true);
                     engine.beginHandshake();
+
                 } catch (SSLException e)
                 {
                     e.printStackTrace();
@@ -97,12 +89,14 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
 
 
         mpesaObject = new Mpesa(Constants.APP_KEY,Constants.APP_SECRET);;
+
         mpesaBtn = findViewById(R.id.toMpesaBtn);
         mpesaBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
+                //call to start STKPush Simulation on separate thread
                 new AsyncCaller().execute();
             }
         });
@@ -212,8 +206,9 @@ public class MainActivity extends AppCompatActivity implements ProviderInstaller
             protected Void doInBackground(Void... params)
             {
                 try {
-                 //   mpesaObject.authenticate();
-                    mpesaObject.STKPushSimulation("174379",
+
+                    mpesaObject.authenticate();
+                    mpesaObject.STKPushSimulation(shortCode,
                             password,
                             timeStamp,
                             "CustomerBuyGoodsOnline",

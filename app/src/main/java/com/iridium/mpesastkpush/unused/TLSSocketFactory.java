@@ -10,6 +10,13 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+
+
+/**
+ * WILL NEVER BE USED
+ * IGNORE
+ */
+
 public class TLSSocketFactory extends SSLSocketFactory
 {
 

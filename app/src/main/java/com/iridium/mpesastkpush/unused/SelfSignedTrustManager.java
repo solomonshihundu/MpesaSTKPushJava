@@ -8,6 +8,14 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.X509TrustManager;
 
+
+
+/**
+ * WILL NEVER BE USED
+ * IGNORE
+ */
+
+
 public class SelfSignedTrustManager implements X509TrustManager {
 
     private static final X509Certificate[] acceptedIssuers = new X509Certificate[]{};

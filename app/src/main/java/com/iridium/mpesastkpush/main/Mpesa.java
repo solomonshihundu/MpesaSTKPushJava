@@ -16,13 +16,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-
-
 public class Mpesa
 {
     private String appKey;
     private String appSecret;
+
     private String TAG = "MPESA_APP_ACTIVITY";
+
     public Mpesa(String app_key, String app_secret)
     {
         appKey=app_key;
@@ -30,26 +30,13 @@ public class Mpesa
 
     }
 
-    public String getAppKey()
-    {
-        return appKey;
-    }
-
-    public void setAppKey(String appKey)
-    {
-        this.appKey = appKey;
-    }
-
-    public String getAppSecret()
-    {
-        return appSecret;
-    }
-
-    public void setAppSecret(String appSecret)
-    {
-        this.appSecret = appSecret;
-    }
-
+    /**
+     *
+     *Request for access token from safaricom
+     *  Return the access token as a String
+     *
+     *
+     */
 
     public String authenticate() throws IOException, JSONException
     {
@@ -73,6 +60,7 @@ public class Mpesa
                 .url("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials")
                 .get()
                 .addHeader("authorization",encoded.trim())
+                .addHeader("cache-control", "no-cache")
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -86,6 +74,8 @@ public class Mpesa
 
         return accessToken;
     }
+
+    
 
     public String C2BSimulation( String shortCode, String commandID, String amount, String MSISDN, String billRefNumber) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
@@ -116,6 +106,7 @@ public class Mpesa
         System.out.println(response.body().string());
         return response.body().toString();
     }
+
 
     public String B2CRequest( String initiatorName, String securityCredential,String commandID, String  amount, String partyA,String partyB, String remarks, String queueTimeOutURL, String resultURL, String occassion) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
@@ -153,6 +144,7 @@ public class Mpesa
         return response.body().toString();
     }
 
+
     public String B2BRequest( String initiatorName, String accountReference,String securityCredential,String commandID, String senderIdentifierType,String receiverIdentifierType,float  amount, String partyA,String partyB, String remarks, String queueTimeOutURL, String resultURL, String occassion) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
@@ -168,8 +160,6 @@ public class Mpesa
         jsonObject.put("AccountReference", accountReference);
         jsonObject.put("QueueTimeOutURL", queueTimeOutURL);
         jsonObject.put("ResultURL", resultURL);
-
-
 
         jsonArray.put(jsonObject);
 
@@ -193,6 +183,8 @@ public class Mpesa
         return response.body().string();
 
     }
+
+
     public String STKPushSimulation(String businessShortCode, String password, String timestamp,String transactionType, String amount, String phoneNumber, String partyA, String partyB, String callBackURL, String messageConfirmationURL,String accountReference, String transactionDesc) throws IOException, JSONException
     {
         JSONArray jsonArray=new JSONArray();
@@ -209,8 +201,6 @@ public class Mpesa
         jsonObject.put("AccountReference", accountReference);
         jsonObject.put("MessageConfirmationURL", messageConfirmationURL);
         jsonObject.put("TransactionDesc", transactionDesc);
-
-
 
         jsonArray.put(jsonObject);
 
@@ -232,6 +222,8 @@ public class Mpesa
         System.out.println(response.body().string());
         return response.body().toString();
     }
+
+
     public String STKPushTransactionStatus( String businessShortCode, String password, String timestamp, String checkoutRequestID) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
@@ -261,6 +253,9 @@ public class Mpesa
         return response.body().toString();
 
     }
+
+
+
     public String reversal(String initiator, String securityCredential, String commandID, String transactionID, String amount, String receiverParty, String recieverIdentifierType, String resultURL,String queueTimeOutURL, String remarks, String ocassion) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
@@ -275,8 +270,6 @@ public class Mpesa
         jsonObject.put("ResultURL", resultURL);
         jsonObject.put("Remarks", remarks);
         jsonObject.put("Occasion", ocassion);
-
-
 
         jsonArray.put(jsonObject);
 
@@ -299,6 +292,8 @@ public class Mpesa
         System.out.println(response.body().string());
         return response.body().string();
     }
+
+
     public String balanceInquiry(String initiator, String commandID, String securityCredential, String partyA, String identifierType, String remarks, String queueTimeOutURL, String resultURL) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
@@ -310,9 +305,6 @@ public class Mpesa
         jsonObject.put("Remarks", remarks);
         jsonObject.put("QueueTimeOutURL", queueTimeOutURL);
         jsonObject.put("ResultURL", resultURL);
-
-
-
 
         jsonArray.put(jsonObject);
 
@@ -335,6 +327,8 @@ public class Mpesa
         Response response = client.newCall(request).execute();
         return response.body().string();
     }
+
+
     public  String registerURL(String shortCode, String responseType, String confirmationURL, String validationURL) throws IOException, JSONException {
         JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
@@ -342,9 +336,6 @@ public class Mpesa
         jsonObject.put("ResponseType", responseType);
         jsonObject.put("ConfirmationURL", confirmationURL);
         jsonObject.put("ValidationURL", validationURL);
-
-
-
 
         jsonArray.put(jsonObject);
 
